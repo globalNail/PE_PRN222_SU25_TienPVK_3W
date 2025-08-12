@@ -1,0 +1,131 @@
+﻿@page "/PantherProfile/Index"
+@model PantherPeManagement.Pages.PantherProfile.IndexModel
+
+@{
+    ViewData["Title"] = "Panther Profiles";
+}
+
+<h1>Panther Profiles</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PantherProfiles.First().PantherName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PantherProfiles.First().Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PantherProfiles.First().Characteristics)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PantherProfiles.First().Warning)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PantherProfiles.First().ModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PantherProfiles.First().PantherType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PantherProfiles)
+        {
+            <tr>
+                <td>
+                    @item.PantherName
+                </td>
+                <td>
+                    @item.Weight
+                </td>
+                <td>
+                    @item.Characteristics
+                </td>
+                <td>
+                    @item.Warning
+                </td>
+                <td>
+                    @item.ModifiedDate.ToString("yyyy-MM-dd")
+                </td>
+                <td>
+                    @item.PantherType?.PantherTypeName
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.PantherProfileId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.PantherProfileId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.PantherProfileId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="pagination-container">
+    <div class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <span class="page-link current">@i</span>
+            }
+            else
+            {
+                <a asp-page="./Index"
+                   asp-route-pageNumber="@i"
+                   asp-route-SearchWeight="@Model.SearchWeight"
+                   asp-route-SearchLionTypeName="@Model.SearchPantherTypeName"
+                   asp-route-IsSearching="@Model.IsSearching"
+                   class="page-link">@i</a>
+            }
+        }
+    </div>
+
+    <div class="pagination-info">
+        Page @Model.CurrentPage of @Model.TotalPages (Total: @Model.TotalCount items)
+    </div>
+</div>
+
+<style>
+    .pagination-container {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .pagination {
+        display: inline-flex;
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+
+    .page-link {
+        padding: 8px 12px;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        color: #007bff;
+        background-color: white;
+        border-radius: 4px;
+    }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+            text-decoration: none;
+        }
+
+        .page-link.current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            font-weight: bold;
+        }
+
+    .pagination-info {
+        color: #6c757d;
+        font-size: 14px;
+    }
+</style>
