@@ -13,9 +13,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<Su25pantherDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IPantherAccountRepository, PantherAccountRepository>();
-builder.Services.AddScoped<IPantherProfileRepository, PantherProfileRepository>();
-builder.Services.AddScoped<IPantherTypeRepository, PantherTypeRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IPantherAccountService, PantherAccountService>();
 builder.Services.AddScoped<IPantherProfileService, PantherProfileService>();
 builder.Services.AddScoped<IPantherTypeService, PantherTypeService>();

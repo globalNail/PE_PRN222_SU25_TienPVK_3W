@@ -6,16 +6,16 @@ namespace BLL.Services.Implements
 {
     public class PantherTypeService : IPantherTypeService
     {
-        private readonly IPantherTypeRepository _pantherTypeRepository;
+        private readonly IGenericRepository<PantherType> _repo;
 
-        public PantherTypeService(IPantherTypeRepository pantherTypeRepository)
+        public PantherTypeService(IGenericRepository<PantherType> repo)
         {
-            _pantherTypeRepository = pantherTypeRepository;
+            _repo = repo;
         }
 
         public async Task<IEnumerable<PantherType>> GetAllPantherTypesAsync()
         {
-            return await _pantherTypeRepository.GetAllAsync();
+            return await _repo.GetAllAsync();
         }
     }
 }

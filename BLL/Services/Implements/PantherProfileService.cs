@@ -7,11 +7,11 @@ namespace BLL.Services.Implements
 {
     public class PantherProfileService : IPantherProfileService
     {
-        private readonly IPantherProfileRepository _pantherProfileRepository;
+        private readonly IGenericRepository<PantherProfile> _repo;
 
-        public PantherProfileService(IPantherProfileRepository pantherProfileRepository)
+        public PantherProfileService(IGenericRepository<PantherProfile> repo)
         {
-            _pantherProfileRepository = pantherProfileRepository;
+            _repo = repo;
         }
 
         private void MapToPantherProfile(PantherProfileRequest request, PantherProfile pantherProfile)
@@ -28,28 +28,28 @@ namespace BLL.Services.Implements
         {
             var newPanther = new PantherProfile();
             MapToPantherProfile(request, newPanther);
-            await _pantherProfileRepository.AddAsync(newPanther);
+            await _repo.AddAsync(newPanther);
         }
 
         public async Task<int> DeletePantherProfileAsync(int id)
         {
-            var panther = await _pantherProfileRepository.GetFirstOrDefaultAsync(l => l.PantherProfileId == id);
+            var panther = await _repo.GetFirstOrDefaultAsync(l => l.PantherProfileId == id);
             if (panther == null)
             {
                 throw new KeyNotFoundException($"PantherProfile with ID {id} not found.");
 
             }
-            return await _pantherProfileRepository.DeleteAsync(panther);
+            return await _repo.DeleteAsync(panther);
         }
 
         public async Task<PantherProfile> GetPantherProfileByIdAsync(int id)
         {
-            return await _pantherProfileRepository.GetFirstOrDefaultAsync(l => l.PantherProfileId == id, l => l.PantherType);
+            return await _repo.GetFirstOrDefaultAsync(l => l.PantherProfileId == id, l => l.PantherType);
         }
 
         public async Task<(IEnumerable<PantherProfile> pantherProfiles, int totalCount, int totalPages, bool hasPrevious, bool hasNext)> GetPagedPantherProfilesAsync(int pageNumber, int pageSize)
         {
-            return await _pantherProfileRepository.GetPagedAsync(pageNumber, pageSize, null, l => l.PantherType, l => l.ModifiedDate, true);
+            return await _repo.GetPagedAsync(pageNumber, pageSize, null, l => l.PantherType, l => l.ModifiedDate, true);
         }
 
         public async Task<(IEnumerable<PantherProfile> pantherProfiles, int totalCount, int totalPages, bool hasPrevious, bool hasNext)> SearchPantherProfilesAsync(int pageNumber, int pageSize, double? weight, string? pantherTypeName)
@@ -62,19 +62,19 @@ namespace BLL.Services.Implements
                              (!string.IsNullOrEmpty(pantherTypeName) && l.PantherType != null && l.PantherType.PantherTypeName != null && l.PantherType.PantherTypeName.Contains(pantherTypeName));
             }
 
-            return await _pantherProfileRepository.GetPagedAsync(pageNumber, pageSize, filter, l => l.PantherType, l => l.ModifiedDate, true);
+            return await _repo.GetPagedAsync(pageNumber, pageSize, filter, l => l.PantherType, l => l.ModifiedDate, true);
         }
 
         public async Task UpdatePantherProfileAsync(int id, PantherProfileRequest request)
         {
-            var panther = await _pantherProfileRepository.GetFirstOrDefaultAsync(l => l.PantherProfileId == id);
+            var panther = await _repo.GetFirstOrDefaultAsync(l => l.PantherProfileId == id);
             if (panther == null)
             {
                 throw new KeyNotFoundException($"PantherProfile with ID {id} not found.");
 
             }
             MapToPantherProfile(request, panther);
-            await _pantherProfileRepository.UpdateAsync(panther);
+            await _repo.UpdateAsync(panther);
         }
     }
 }

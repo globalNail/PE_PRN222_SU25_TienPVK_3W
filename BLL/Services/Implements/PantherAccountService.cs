@@ -7,16 +7,16 @@ namespace BLL.Services.Implements
 {
     public class PantherAccountService : IPantherAccountService
     {
-        private readonly IPantherAccountRepository _pantherAccountRepository;
+        private readonly IGenericRepository<PantherAccount> _repo;
 
-        public PantherAccountService(IPantherAccountRepository pantherAccountRepository)
+        public PantherAccountService(IGenericRepository<PantherAccount> repo)
         {
-            _pantherAccountRepository = pantherAccountRepository;
+            _repo = repo;
         }
 
         public async Task<PantherAccount> Authenticate(LoginRequest request)
         {
-            var _pantherAccount = await _pantherAccountRepository.GetFirstOrDefaultAsync(
+            var _pantherAccount = await _repo.GetFirstOrDefaultAsync(
                 x => x.Email == request.Email && x.Password == request.Password);
             return _pantherAccount;
         }
